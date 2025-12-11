@@ -1,0 +1,80 @@
+{
+  "contact": {
+    "email": "aluprince03@gmail.com",
+    "location": "Port Harcourt, Nigeria"
+  },
+  "experience": [
+    {
+      "role": "Backend & AI Engineer",
+      "company": "Independent / Project-Based",
+      "bullets": [
+        "Developed scalable backend APIs and AI pipelines for startups, hackathons, and independent projects, using FastAPI, Python, and SQLAlchemy.",
+        "Built a RAG-powered authentication AI chatbot reducing verification support workload by ~45%, leveraging embeddings, LangChain, and caching strategies for faster retrieval (~30% latency improvement).",
+        "Designed and implemented secure authentication flows with JWT, token refresh logic, rate limiting, and session management for multiple projects.",
+        "Architected database schemas and relationships for authentication, user roles, and session tracking in PostgreSQL; optimized queries for high throughput.",
+        "Built a productivity Task Manager app with automated reminders, task prioritization scoring, and dashboard analytics to improve team and personal workflows.",
+        "Collaborated in the AyoMama Hackathon, leading backend development using Node.js/Express, Docker, and PostgreSQL to build an AI-powered maternal support platform with secure APIs and data pipelines.",
+        "Designed and implemented the authentication and database schema for BidBuy e-commerce prototype using Express/Node.js, PostgreSQL, and Docker for containerized deployment.",
+        "Improved backend performance for multiple services, optimizing API endpoints with async I/O, caching strategies, and query profiling, achieving 20–35% faster response times.",
+        "Created reusable backend service templates (auth, logging, db init, error handling) reducing new project setup time by ~50%."
+      ],
+      "skills": [
+        "FastAPI",
+        "Python",
+        "SQLAlchemy",
+        "PostgreSQL",
+        "Node.js",
+        "Express",
+        "Docker",
+        "RAG Architecture",
+        "LangChain",
+        "LangGraph",
+        "Embeddings",
+        "JWT",
+        "AsyncIO",
+        "System Design",
+        "API Development",
+        "Rest APIs",
+        "Database Schema Design"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Task Manager App (Productivity System)",
+      "bullets": [
+        "Designed and built a full-stack task management system for productivity tracking and habit optimization.",
+        "Implemented automated task scoring, reminders, and priority analytics dashboards.",
+        "Integrated backend APIs with PostgreSQL and Docker for smooth local and team deployment."
+      ],
+      "skills": ["FastAPI", "Python", "PostgreSQL", "Docker", "Automation"]
+    },
+    {
+      "name": "AyoMama Hackathon – AI Maternal Support Platform",
+      "bullets": [
+        "Co-led backend development using Node.js, Express, PostgreSQL, and Docker in a hackathon setting.",
+        "Built secure REST APIs for pregnancy and postpartum support modules.",
+        "Integrated AI-powered chatbot with content filtering to ensure medically accurate responses."
+      ],
+      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "AI Integration", "Hackathon Leadership"]
+    },
+    {
+      "name": "AI Authentication Chatbot (RAG + Verification Flow)",
+      "bullets": [
+        "Built a secure LLM-powered assistant handling user verification and onboarding queries.",
+        "Optimized retrieval latency using embeddings caching, chunk compression, and async search pipelines.",
+        "Integrated token-based authentication and rate limiting to prevent abuse."
+      ],
+      "skills": ["Python", "RAG", "LangChain", "Embeddings", "Vector Stores", "JWT", "AsyncIO"]
+    },
+    {
+      "name": "BidBuy Marketplace – Authentication & Schema Design",
+      "bullets": [
+        "Designed and implemented user authentication systems for an e-commerce prototype using Node.js/Express and PostgreSQL.",
+        "Created normalized database schemas covering users, roles, permissions, sessions, and verification flows.",
+        "Implemented Dockerized deployment, secure password hashing, login attempt tracking, and token refresh logic."
+      ],
+      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "Authentication Systems"]
+    }
+  ]
+}
