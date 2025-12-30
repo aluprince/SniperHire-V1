@@ -56,7 +56,7 @@
         "Built secure REST APIs for pregnancy and postpartum support modules.",
         "Integrated AI-powered chatbot with content filtering to ensure medically accurate responses."
       ],
-      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "AI Integration", "Hackathon Leadership"]
+      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "AI Integration", "Hackathon Leadership", "Leadership", "Collaboration"]
     },
     {
       "name": "AI Authentication Chatbot (RAG + Verification Flow)",
@@ -74,7 +74,7 @@
         "Created normalized database schemas covering users, roles, permissions, sessions, and verification flows.",
         "Implemented Dockerized deployment, secure password hashing, login attempt tracking, and token refresh logic."
       ],
-      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "Authentication Systems"]
+      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "Authentication Systems", "System Design"]
     }
   ]
 }

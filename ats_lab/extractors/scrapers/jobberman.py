@@ -1,12 +1,13 @@
 import os
 from .utils.logger import logger
-import re
 from dotenv import load_dotenv, find_dotenv
 import asyncio
 from playwright.async_api import async_playwright, Playwright, TimeoutError as PlaywrightTimeoutError
+from ...db.engine import SessionLocal
 from ...db.models import JobScraped
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
 
 
 load_dotenv(find_dotenv())
@@ -15,8 +16,14 @@ JOBBERMAN_EMAIL = os.getenv("JOBBERMAN_EMAIL")
 JOBBERMAN_PASSWORD = os.getenv("JOBBERMAN_PASSWORD")
 
 
+def clean_job_desc(job_desc: list) -> str:
+    if not job_desc:
+        return "N/A"
+    cleaned_desc = " ".join([desc.strip() for desc in job_desc if desc.strip()])
+    return cleaned_desc
 
-async def scrape_jobberman_job(playwright: Playwright, job_title: str, locations: str, num_of_jobs: int, lastest_only: bool, db:Session):
+
+async def scrape_jobberman_job(playwright: Playwright, job_title: str, locations: str, num_of_jobs: int, lastest_only: bool):
     try:
         logger.info(">>> LET TRY JOBBERMAN JOBBOARD TODAY")
         logger.info(">>> LOGGER ACTIVE")
@@ -126,7 +133,6 @@ async def scrape_jobberman_job(playwright: Playwright, job_title: str, locations
                 print(i)
                 job_card = job_cards.nth(i) 
                 card_text = await job_cards.nth(i).inner_text()
-                print(job_card)
                 card_btn = job_card.locator("p.text-lg") 
                 await card_btn.click()
 
@@ -142,31 +148,45 @@ async def scrape_jobberman_job(playwright: Playwright, job_title: str, locations
                     job_description = await page.locator("ul.list-disc.list-inside").all_inner_texts()
                 except:
                     job_description = "N/A"
+                try:
+                    job_url = page.url
+                except:
+                    job_url = "N/A"
+
+                cleaned_description = clean_job_desc(job_description)
                 print("job_title: ", job_title.strip())
                 print("company: ", job_company.strip())
-                print("description :",job_description)
+                print("description :",cleaned_description)
                     
-                print("card found:",  card_text)
-
-
 
                 # Save to DB
-                try:
-                    new_job = JobScraped(
-                        job_title=job_title,
-                        job_company=job_company,
-                        job_description=job_description,
-                        location=locations
-                    )
-                    db.add(new_job)
-                    db.commit()
-                    db.refresh()
-                except IntegrityError:
-                    db.rollback()
-                except Exception as e:
-                    db.rollback()
-
-                logger.info(f">>> {job_title} has been saved successfully to database ")
+                with SessionLocal() as db:
+                    # count = db.query(JobScraped).count()
+                    # jobs = db.query(JobScraped).limit(10).all()
+                    # print(f"Total jobs in DB: {count}")
+                    # for job in jobs:
+                    #     print(f"  {job.job_title} @ {job.company_name}")
+                    print(" ---------- ")
+                    try:
+                        new_job = JobScraped(
+                            job_title=job_title,
+                            company_name=job_company,
+                            job_description=cleaned_description,
+                            job_url=job_url,
+                            location=locations,
+                            source="jobberman"
+                        )
+                        print("saving to db... ")
+                        db.add(new_job)
+                        db.commit()
+                        db.refresh(new_job)
+                        logger.info(f"{job_title} has been saved")
+                    except IntegrityError:
+                        db.rollback()
+                        logger.warning(f"Duplicate job: {job_title}")
+                    except Exception as e:
+                        db.rollback()
+                        logger.debug(e)
 
                 await page.go_back()
         except Exception as e:
@@ -176,14 +196,13 @@ async def scrape_jobberman_job(playwright: Playwright, job_title: str, locations
         logger.debug("Timeout", TimeoutError)
     except Exception as e:
         logger.debug(e)
-        print(">>>Scraper Failed.....")
     finally:
         await browser.close()
         logger.info(">>> BROWSER CLOSED >>>")
 
 async def main():
     async with async_playwright() as playwright:
-        await scrape_jobberman_job(playwright, "backend developer", "remote", 10, lastest_only=True)
+        await scrape_jobberman_job(playwright, "software developer", "remote", 10, lastest_only=True)
 
 if __name__ == "__main__":
     print(">>> starting >>>")

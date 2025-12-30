@@ -13,7 +13,8 @@ psycopg2-binary==2.9.9
 
 # === NLP / Extractors ===
 spacy==3.7.4
-spacy-langdetect==0.1.0
+spacy-langdetect
+# ==0.1.0
 beautifulsoup4==4.12.3
 lxml==5.2.2
 

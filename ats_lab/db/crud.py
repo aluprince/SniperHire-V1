@@ -1,28 +1,33 @@
-from .models import RunLog
+from .models import RunLog, JobScraped
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
-def log_run(db, jd_id, version, ats_score_before, ats_score_after, hallucinations):
-    """ insert a new log row for calculating ats score """
+
+# get all job descriptions that are not processed in the db
+
+def get_unprocessed_job_descriptions(db: Session):
+    """ Get all job descriptions that are not processed in the db"""
     try:
-        entry = RunLog(jd_id=jd_id,
-                        version=version,
-                        ats_score_before=ats_score_before,
-                        ats_score_after=ats_score_after,
-                        hallucinations=hallucinations)
-        
-        db.add(entry)
-        db.commit()
-        db.refresh(entry)
+        job_description = db.query(JobScraped).filter(JobScraped.is_processed == False).all()
+        return job_description
     except SQLAlchemyError as e:
-        print("Error logging run:", e)
-        db.rollback()
-        return None
+        print(f"Error retrieving unprocessed job descriptions")
+        print("Error details:", str(e))
 
-def get_all_logs(db):
-    """returns all RunLogs entry"""
-    return db.query(RunLog).all()
+def get_processed_job_descriptions(db: Session):
+    """ Get all job descriptions that are processed in the db"""
+    try:
+        job_description_processed = db.query(JobScraped).filter(JobScraped.is_processed == True).all()
+        return job_description_processed
+    except SQLAlchemyError as e:
+        print(f"Error retrieving processed job descriptions")
+        print("Error details:", str(e))
 
-def get_runs_by_jd(db, jd_id):
-    filtered_jd = db.query(RunLog).where(RunLog.jd_id == jd_id).all()
-    return filtered_jd
+def get_job_description(db: Session, jd_id: int):
+    """ Get a job description by its ID"""
+    try:
+        job_description = db.query(JobScraped).filter(JobScraped.id == jd_id).first()
+        return job_description
+    except SQLAlchemyError as e:
+        print(f"Error retrieving job description with ID {jd_id}")
+        print("Error details:", str(e))
