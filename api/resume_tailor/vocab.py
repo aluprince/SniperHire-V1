@@ -18,6 +18,17 @@ LANGUAGES = {
 }
 
 ROLE_TERMS = {
-    "backend", "frontend", "full stack", "ai engineer"
+    "backend", "frontend", "full stack", "ai engineer",
     "api", "microservices", "automation", "ml engineer"
 }
+SKILL_ALIASES = {
+    "react": ["react", "react.js", "reactjs"],
+    "nodejs": ["node", "node.js", "nodejs"],
+    "postgresql": ["postgres", "postgresql", "psql"],
+    "javascript": ["javascript", "js"],
+    "python": ["python", "py"],
+}
+CONCEPTS =  {
+    "restful apis", "jwt-based systems", "authentication and authorization mechanisms", "llm integrations",
+    "asychronous programming", "microservices", "system design", "object oriented programming", "oop", "ci/cd pipelines"
+    }
