@@ -24,6 +24,7 @@
         "SQLAlchemy",
         "PostgreSQL",
         "Node.js",
+        "node",
         "Express",
         "Docker",
         "RAG Architecture",
@@ -31,11 +32,16 @@
         "LangGraph",
         "Embeddings",
         "JWT",
+        "Async",
         "AsyncIO",
         "System Design",
         "API Development",
         "Rest APIs",
-        "Database Schema Design"
+        "Database Schema Design",
+        "AI Integration",
+        "LLM Integration",
+        "Rate Limiting",
+        "Caching"
       ]
     }
   ],
@@ -74,7 +80,7 @@
         "Created normalized database schemas covering users, roles, permissions, sessions, and verification flows.",
         "Implemented Dockerized deployment, secure password hashing, login attempt tracking, and token refresh logic."
       ],
-      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "Authentication Systems", "System Design"]
+      "skills": ["Node.js", "Express", "PostgreSQL", "Docker", "Authentication Systems", "Authentication Mechanism", "System Design"]
     }
   ]
 }

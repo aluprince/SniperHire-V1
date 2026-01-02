@@ -1,34 +1,44 @@
-SKILLS = {
-    "python", "sql", "javascript", "go", "rust",
-    "machine learning", "ai engineering", "automation"
+CANONICAL_MAP = {
+    "react": ["react", "react.js", "reactjs", "react js"],
+    "node": ["node", "node.js", "nodejs", "node js", "express", "express.js"],
+    "postgresql": ["postgres", "postgresql", "psql", "sql database", "relational database", "sqlalchemy"],
+    "javascript": ["javascript", "js", "ecmascript"],
+    "python": ["python", "py", "python3"],
+    "ci/cd": ["ci/cd", "cicd", "ci cd", "ci-cd", "pipelines", "github actions", "automation"],
+    "docker": ["docker", "dockerized", "containerization", "containers"],
+    "fastapi": ["fastapi", "fast-api", "fast api"]
 }
 
-TOOLS = {
-    "docker", "git", "postgresql", "redis",
-    "aws", "linux"
+CONCEPT_CANONICAL_MAP = {
+    "rest": [
+        "rest", "rest api", "restful api", "restful apis", "restful services",
+        "api development", "backend apis", "endpoint optimization"
+    ],
+    "jwt": [
+        "jwt", "jwt-based", "json web tokens", "token-based", 
+        "token refresh logic", "session management"
+    ],
+    "authentication": [
+        "authentication", "authorization", "auth", "auth systems",
+        "authentication mechanism", "secure authentication flows",
+        "access control", "user roles", "permissions", "rate limiting"
+    ],
+    "async": [
+        "async", "asyncio", "async i/o", "asynchronous programming",
+        "concurrency", "non-blocking", "latency improvement", "throughput"
+    ],
+    "llm": [
+        "llm", "large language models", "llm integrations", "ai-powered",
+        "rag", "retrieval augmented generation", "langchain", "langgraph",
+        "embeddings", "vector stores", "chatbot", "ai pipelines"
+    ],
+    "database_design": [
+        "database schema", "schema design", "database architecture",
+        "normalized database", "query optimization", "query profiling",
+        "data pipelines", "indexing"
+    ],
+    "backend_performance": [
+        "caching", "caching strategies", "performance optimization",
+        "latency", "profiling", "scalable backend"
+    ]
 }
-
-FRAMEWORKS = {
-    "fastapi", "django", "flask", "react",
-    "pandas", "numpy", "streamlit", "langchain", 
-}
-
-LANGUAGES = {
-    "python", "javascript", "rust", "go"
-}
-
-ROLE_TERMS = {
-    "backend", "frontend", "full stack", "ai engineer",
-    "api", "microservices", "automation", "ml engineer"
-}
-SKILL_ALIASES = {
-    "react": ["react", "react.js", "reactjs"],
-    "nodejs": ["node", "node.js", "nodejs"],
-    "postgresql": ["postgres", "postgresql", "psql"],
-    "javascript": ["javascript", "js"],
-    "python": ["python", "py"],
-}
-CONCEPTS =  {
-    "restful apis", "jwt-based systems", "authentication and authorization mechanisms", "llm integrations",
-    "asychronous programming", "microservices", "system design", "object oriented programming", "oop", "ci/cd pipelines"
-    }

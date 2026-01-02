@@ -1,117 +1,112 @@
 import re
-from .vocab import SKILLS, TOOLS, FRAMEWORKS, LANGUAGES, ROLE_TERMS, SKILL_ALIASES, CONCEPTS
+import os
+from groq import Groq
+from dotenv import load_dotenv
+from .vocab import  CANONICAL_MAP, CONCEPT_CANONICAL_MAP
+from .prompts import JD_REQUIREMENTS_PROMPT
+from .score import calculate_score
+import json
 
 
-def normalize_job_description(jd_text):
-    text = jd_text.lower()
-    text = re.sub(r"[^a-z0-9\s]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+load_dotenv()
 
-STOPWORDS = {"and", "or", "to", "for", "in", "a", "we", "are"}
+current_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(current_dir, "master_resume.json")
 
-def valid_ngram(ngram):
-    words = ngram.split()
-    return words[0] not in STOPWORDS and words[-1] not in STOPWORDS
-
-def generate_ngrams(tokens: list, n):
-    ngrams = []
-    for i in range(len(tokens) - n + 1):
-        ngram = " ".join(tokens[i:i + n])
-        ngrams.append(ngram)
-    return ngrams
+with open(file_path, "r") as file: 
+    master_resume = json.load(file)
 
 
-def extract_job_description(jd_text):
-    cleaned_text = normalize_job_description(jd_text)
-    tokens = cleaned_text.split()
-    unigram = set(tokens)
-    bigrams = set(generate_ngrams(tokens, 2))
-    trigrams = set(generate_ngrams(tokens, 3))
-    all_terms = unigram | bigrams | trigrams
-    all_terms = [term for term in all_terms if valid_ngram(term)]
+VARIANT_TO_CANONICAL = {
+    variant: canonical
+    for canonical, variants in CANONICAL_MAP.items()
+    for variant in variants
+}
 
-    print(all_terms)
+VARIANT_TO_CONCEPT_CANONICAL = {
+    variant: canonical
+    for canonical, variants in CONCEPT_CANONICAL_MAP.items()
+    for variant in variants
+}
 
-    return all_terms
 
-def normalize_terms(text: str, aliases: dict, jd_list) -> set[str]:
-    """
-    Converts free text into a set of canonical skill tokens.
-    """
-    text = text.lower()
-    found = set()
 
-    for canonical, variants in aliases.items():
-        for v in variants:
-            if v in text:
-                found.add(canonical)
-                break  # stop after first match
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY"),
+)
+
+import re
+import json
+
+
+
+def normalize_output(raw_text: str):
+    text = raw_text.lower().replace("```json", "").replace("```", "").strip()
+
+    # Combine both maps for a single pass or handle them sequentially
+    # We use VARIANT_TO_CANONICAL (mapping "py" -> "python")
     
-    for term in jd_list:
-        if term in SKILLS:
-            found.add(term)
-        if term in FRAMEWORKS:
-            found.add(term)
-        if term in TOOLS:
-            found.add(term)
-        if term in ROLE_TERMS:
-            found.add(term)
-        if term in CONCEPTS:
-            found.add(term)
-        
-    print("FOUND: ", found)
+    # CRITICAL: Sort variants by length descending
+    # This ensures "restful api" is caught before "rest"
+    all_variants = sorted(VARIANT_TO_CANONICAL.keys(), key=len, reverse=True)
+    
+    for variant in all_variants:
+        canonical = VARIANT_TO_CANONICAL[variant]
+        # \b ensures we don't match 'py' inside 'happy'
+        # re.escape ensures characters like '+' in 'C++' don't break the regex
+        pattern = r'\b' + re.escape(variant) + r'\b'
+        text = re.sub(pattern, canonical, text)
 
-    return found
+    concept_variants = sorted(VARIANT_TO_CONCEPT_CANONICAL.keys(), key=len, reverse=True)
+    for variant in concept_variants:
+        canonical = VARIANT_TO_CONCEPT_CANONICAL[variant]
+        pattern = r'\b' + re.escape(variant) + r'\b'
+        text = re.sub(pattern, canonical, text)
 
-
-def classify_terms(terms: list) -> dict:
-
-    classified = {
-        "skills": [],
-        "frameworks": [],
-        "tools": [],
-        "languages": [],
-        "role_terms": [],
-        "concepts": []
-    }
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        print(f"Failed to parse JSON. Text was: {text}")
+        raise e
+    
 
 
-    for term in terms:
-        print(term)
-        if term in SKILLS:
-            print("found in skills: ", term)
-            classified["skills"].append(term)
-        if term in FRAMEWORKS:
-            print("found in framework: ", term)
-            classified["frameworks"].append(term)
-        if term in TOOLS:
-            print("found in tools: ", term)
-            classified["tools"].append(term)
-        if term in LANGUAGES:
-            print("found in languages: ", term)
-            classified["languages"].append(term)
-        if term in ROLE_TERMS:
-            print("found in role_terms: ", term)
-            classified["role_terms"].append(term)
-        if term in CONCEPTS:
-            print('found in concepts: ', term)
-            classified["concepts"].append(terms)
+def extract_relevant_jd(job_description, model):
+    chat_completion = client.chat.completions.create(
+        messages=[{
+            "role" : "user",
+            "content": f"""{JD_REQUIREMENTS_PROMPT.format(job_description=job_description)}"""
+        }],
+        model=model
+    )
+    print(chat_completion.choices[0].message.content)
 
-        print("new classified: ", classified)
+    result = chat_completion.choices[0].message.content
+    return result
 
-    return classified
 
 
 if __name__ == "__main__":
+    print(">>> Extracting JD Requirements <<< ")
+    jd = """We are looking for a Backend Software Engineer to build and maintain scalable APIs for our core platform.
 
-    jd = """We are looking for a backend developer skilled in Python, Django, and AWS to build scalable APIs."""
-    terms = extract_job_description(jd)
-    print("Extracted Terms:", terms)
-    normalized = normalize_terms(jd, SKILL_ALIASES, jd_list=terms)
-    print("Normalized Terms:", normalized)
-    classified = classify_terms(normalized)
-    print("Classified Terms:", classified)
+The ideal candidate must have strong experience with Python and FastAPI for building production-grade backend services.
+You must be comfortable designing RESTful APIs and working with PostgreSQL databases in a production environment.
+Experience with Docker for containerization is required.
+You are expected to write clean, maintainable code and collaborate with frontend engineers and product managers.
+You must have a solid understanding of authentication and authorization mechanisms such as JWT-based systems.
 
+Experience with cloud platforms such as AWS is a strong plus.
+Familiarity with asynchronous programming using AsyncIO is nice to have.
+Experience working with CI/CD pipelines is considered a bonus.
+Previous experience with AI-powered systems or LLM integrations is not required but would be an advantage.
+"""
+    model=model="llama-3.3-70b-versatile"
+    json_file = extract_relevant_jd(jd, model)
+    print(json_file)
+    normalized = normalize_output(json_file)
+    print(normalized)
+    score = calculate_score(normalized, master_resume)
+    print(f"Resume Match Score: {score[0]}%, {score[1]} matched skills, {score[2]} missing skills")
 
 
