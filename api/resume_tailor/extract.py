@@ -70,7 +70,6 @@ def normalize_output(raw_text: str):
         raise e
     
 
-
 def extract_relevant_jd(job_description, model):
     chat_completion = client.chat.completions.create(
         messages=[{

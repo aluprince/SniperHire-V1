@@ -41,7 +41,8 @@
         "AI Integration",
         "LLM Integration",
         "Rate Limiting",
-        "Caching"
+        "Caching",
+        "Aws"
       ]
     }
   ],
@@ -71,7 +72,7 @@
         "Optimized retrieval latency using embeddings caching, chunk compression, and async search pipelines.",
         "Integrated token-based authentication and rate limiting to prevent abuse."
       ],
-      "skills": ["Python", "RAG", "LangChain", "Embeddings", "Vector Stores", "JWT", "AsyncIO"]
+      "skills": ["Python", "RAG", "LangChain", "Embeddings", "Vector Stores", "JWT", "AsyncIO", "LLM"]
     },
     {
       "name": "BidBuy Marketplace – Authentication & Schema Design",

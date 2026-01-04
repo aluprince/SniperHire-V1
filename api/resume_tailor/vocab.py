@@ -42,3 +42,16 @@ CONCEPT_CANONICAL_MAP = {
         "latency", "profiling", "scalable backend"
     ]
 }
+
+
+VARIANT_TO_CANONICAL = {
+    variant: canonical
+    for canonical, variants in CANONICAL_MAP.items()
+    for variant in variants
+}
+
+VARIANT_TO_CONCEPT_CANONICAL = {
+    variant: canonical
+    for canonical, variants in CONCEPT_CANONICAL_MAP.items()
+    for variant in variants
+}
