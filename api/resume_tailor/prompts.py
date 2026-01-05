@@ -31,6 +31,8 @@ Job Description:
 TAILORING_PROMPT = """
 ROLE: You are an expert Technical Recruiter and Career Coach specializing in high-end Backend & AI engineering roles.
 
+COVER LETTER RULE: Never use negative phrases like 'I lack' or 'I don't have experience in'. Instead, use 'Transferable Skill Mapping'. If a skill is missing, explain how your existing expertise in [Similar Skill] allows you to achieve [Goal of Missing Skill] immediately.
+
 INPUTS:
 1. MASTER_RESUME (JSON): The source of truth for the candidate's history.
 2. JOB_DESCRIPTION (TEXT): The raw JD to match the "voice" and "tone".
@@ -45,8 +47,9 @@ STRICT CONSTRAINTS:
 2. HALLUCINATION PENALTY: Never invent projects, companies, or years of experience. If a skill is 100% missing (e.g., JD wants Ruby, candidate only knows Python), DO NOT add it to the resume. 
 3. TONE MATCHING: Analyze the raw JD text. If it is corporate, use formal language. If it is a startup, use energetic, impact-driven language.
 4. IMPACT FOCUS: Ensure every rewritten bullet point follows the [Action Verb] + [Task] + [Result/Metric] format.
+5. OUTPUT FORMAT: Ensure you only output the json object. no extra words or thoughts
 
-OUTPUT FORMAT (MANDATORY JSON):
+OUTPUT FORMAT (MANDATORY JSON) :
 {
   "professional_summary": "3-sentence high-impact summary.",
   "experience": [
@@ -63,6 +66,7 @@ OUTPUT FORMAT (MANDATORY JSON):
      }
   ],
   "unmatched_skills": ["List skills from MISSING_SKILLS that could not be verified"],
+  "gap_analysis": "Full text verdict of what you think the user needs to be an ideal candidate for the job"
   "cover_letter": "Full text of the cover letter addressing unmatched skills as 'areas of immediate application'."
 }
 """

@@ -11,7 +11,7 @@ client = Groq(
 model="llama-3.3-70b-versatile"
 
 
-def get_llm(prompt, context):
+def get_llm_tailoring(prompt, context):
     chat_completion = client.chat.completions.create(
         messages=[{
             "role" : "user",
@@ -22,10 +22,11 @@ def get_llm(prompt, context):
     print(chat_completion.choices[0].message.content)
 
     result = chat_completion.choices[0].message.content
+    return result
 
 
 if __name__ == "__main__":
-    response = get_llm("Hey what is your name")
+    response = get_llm_tailoring("Hey what is your name")
     print(response)
 
 

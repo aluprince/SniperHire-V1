@@ -1,7 +1,7 @@
 import os
 import json
 from .prompts import TAILORING_PROMPT
-from .llm_client import get_llm
+from .llm_client import get_llm_tailoring
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, "master_resume.json")
@@ -22,14 +22,22 @@ def run_tailoring_engine(master_resume, raw_jd, jd_requirements, missing_skills)
     # 2. Call the LLM (Ensuring JSON mode is ON)
     # response = llm.generate(prompt=TAILORING_PROMPT, context=context)
 
-    response = get_llm(prompt=TAILORING_PROMPT, context=context)
+    response = get_llm_tailoring(prompt=TAILORING_PROMPT, context=context)
+    tailored_text = response.replace("```json", "").replace("```", "").strip()
+    tailored_json = json.loads(tailored_text)
+
+    if tailored_json.get("unmatched_skills"):
+        print(f"The JD requires {tailored_json.get('unmatched_skills')}")
+    else:
+        print("seems you are an ideal candidate for this job")
+
     
     # 3. Validation Logic
     # check if 'unmatched_skills' has data. If yes, print a warning for the user.
     # "Warning: The JD requires AWS, but we couldn't find it in your resume. 
     # It has been moved to the Cover Letter strategy."
     
-    return response_json
+    return tailored_json
 
 
 if __name__ == "__main__":
