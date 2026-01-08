@@ -27,46 +27,46 @@ Job Description:
 {job_description}
 """
 
-
 TAILORING_PROMPT = """
-ROLE: You are an expert Technical Recruiter and Career Coach specializing in high-end Backend & AI engineering roles.
+ROLE: Senior Technical Recruiter & ATS Optimization Expert.
 
-COVER LETTER RULE: Never use negative phrases like 'I lack' or 'I don't have experience in'. Instead, use 'Transferable Skill Mapping'. If a skill is missing, explain how your existing expertise in [Similar Skill] allows you to achieve [Goal of Missing Skill] immediately.
+STRATEGY: You are tailoring a resume for a Backend/AI Engineer. 
+- If a skill is in MISSING_SKILLS but the candidate has a "Foundation Skill" (e.g., Docker for AWS, or Node for Async), highlight the Foundation Skill as proof of ability to adapt.
+- Use the 'Education' section to show the candidate is an Engineering Student, not 'Self-Taught'.
 
-INPUTS:
-1. MASTER_RESUME (JSON): The source of truth for the candidate's history.
-2. JOB_DESCRIPTION (TEXT): The raw JD to match the "voice" and "tone".
-3. JD_REQUIREMENTS (JSON): The structured technical requirements.
-4. MISSING_SKILLS (LIST): Specific keywords identified by the scoring engine as missing.
-
-TASK:
-Generate a TAILORED_RESUME_JSON and a COVER_LETTER that optimizes the candidate's visibility for this specific role.
+TASK: You must select the 3 most relevant projects from the MASTER_RESUME based on the JOB_DESCRIPTION.
 
 STRICT CONSTRAINTS:
-1. KEYWORD INJECTION: Use the EXACT phrases from the MISSING_SKILLS list only if you find evidence in the MASTER_RESUME (e.g., if 'JWT' exists, you may use 'Authentication').
-2. HALLUCINATION PENALTY: Never invent projects, companies, or years of experience. If a skill is 100% missing (e.g., JD wants Ruby, candidate only knows Python), DO NOT add it to the resume. 
-3. TONE MATCHING: Analyze the raw JD text. If it is corporate, use formal language. If it is a startup, use energetic, impact-driven language.
-4. IMPACT FOCUS: Ensure every rewritten bullet point follows the [Action Verb] + [Task] + [Result/Metric] format.
-5. OUTPUT FORMAT: Ensure you only output the json object. no extra words or thoughts
+1. KEYWORD DENSITY: Ensure keywords from JD_REQUIREMENTS appear in the Professional Summary and at least two Bullet Points.
+2. CATEGORIZATION: The 'categorized_skills' must include 'languages', 'frameworks', 'tools', and 'concepts'.
+3. NO NEGATIVITY: In the Cover Letter, never apologize for missing skills. Use: "Leveraging my deep experience in [Skill A], I am prepared to immediately apply [Missing Skill B] workflows."
+4. IMPACT: Every bullet must follow: [Strong Action Verb] + [Quantifiable Metric] + [Technical Tool Used].
+5. KEYWORDS: Use the EXACT keyword found in the JOB_DESCRIPTION do not shorten use the same keyword found in the JOB_DESCRIPTION EXACTLY when tailoring.
 
-OUTPUT FORMAT (MANDATORY JSON) :
+OUTPUT FORMAT (JSON ONLY):
 {
-  "professional_summary": "3-sentence high-impact summary.",
+  "professional_summary": "High-impact summary targeting the specific JD role.",
+  "categorized_skills": {
+      "languages": [],
+      "frameworks": [],
+      "tools": [],
+      "concepts": []
+  },
   "experience": [
-     {
-       "company": "Company Name",
-       "role": "Role Name",
-       "bullets": ["Updated bullet 1", "Updated bullet 2"]
-     }
+      {
+        "company": "Company Name",
+        "role": "Role",
+        "bullets": ["Quantified bullet points"]
+      }
   ],
   "projects": [
-     {
-       "name": "Project Name",
-       "bullets": ["Updated bullet 1"]
-     }
+      {
+        "name": "Project Name",
+        "bullets": ["Quantified bullet points"]
+      }
   ],
-  "unmatched_skills": ["List skills from MISSING_SKILLS that could not be verified"],
-  "gap_analysis": "Full text verdict of what you think the user needs to be an ideal candidate for the job"
-  "cover_letter": "Full text of the cover letter addressing unmatched skills as 'areas of immediate application'."
+  "unmatched_skills": ["Keywords that have zero foundation in the Master Resume"],
+  "gap_analysis": "Identify exactly what the user should learn next (e.g., 'Master AWS Lambda' or 'CI/CD with GitHub Actions').",
+  "cover_letter": "A one-page persuasive letter mapping existing skills to JD requirements."
 }
 """

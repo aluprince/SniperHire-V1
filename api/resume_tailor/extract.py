@@ -6,7 +6,7 @@ from .vocab import  CANONICAL_MAP, CONCEPT_CANONICAL_MAP
 from .prompts import JD_REQUIREMENTS_PROMPT
 from .score import calculate_score
 from .tailor import run_tailoring_engine
-from .renderer import generate_ats_pdf
+from .renderer import generate_tailored_resume
 import json
 
 
@@ -109,7 +109,7 @@ Previous experience with AI-powered systems or LLM integrations is not required 
     print(f"Resume Match Score: {score[0]}%, {score[1]} matched skills, {score[2]} missing skills")
     llm_tailored_json = run_tailoring_engine(master_resume=master_resume, raw_jd=jd, jd_requirements=normalized, missing_skills=score)
     # tailored resume 
-    pdf_resume = generate_ats_pdf(llm_tailored_json, master_resume)
+    pdf_resume = generate_tailored_resume(llm_tailored_json, master_resume)
     print(pdf_resume)
 
 

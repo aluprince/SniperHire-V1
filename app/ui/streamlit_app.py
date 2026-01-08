@@ -1,9 +1,9 @@
+import os
 import streamlit as st
 import json
-import os
-from api.resume_tailor.extract import extract_jd_requirements # Your extraction logic
+from  api.resume_tailor.extract import extract_jd_requirements # Your extraction logic
 from api.resume_tailor.score import calculate_score          # Your scoring logic
-from api.resume_tailor.renderer import generate_pdf         # The cleaned renderer
+from api.resume_tailor.renderer import generate_tailored_resume         # The cleaned renderer
 
 st.set_page_config(page_title="SniperHire-V1", layout="wide")
 
