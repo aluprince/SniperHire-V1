@@ -1,0 +1,23 @@
+Role: Senior Backend Engineer (AI & Infrastructure) Location: Remote / Lagos, Nigeria Company: TechFlow Solutions
+
+About the Role: We are looking for a Backend Specialist to bridge the gap between our core API infrastructure and our expanding LLM-based product features. You will be responsible for building high-concurrency systems, optimizing database performance, and implementing robust AI agents.
+
+Requirements:
+
+Core Engineering: 3+ years experience with Python and FastAPI. Deep understanding of AsyncIO and query optimization in PostgreSQL.
+
+AI/ML Integration: Proven experience building RAG (Retrieval-Augmented Generation) architectures using LangChain or LangGraph. Familiarity with Vector Databases (ChromaDB/Pinecone) and Embeddings.
+
+Security & Scalability: Expert knowledge of JWT authentication, OAuth2, and Role-Based Access Control (RBAC). Experience with Docker for containerized deployments and Redis for caching.
+
+Architecture: Strong grasp of System Design, Database Normalization, and RESTful API best practices.
+
+Plus: Experience with Agentic Workflows, autonomous LLM agents, and PDF rendering engines for document automation.
+
+Key Responsibilities:
+
+Design and maintain scalable backend APIs with sub-200ms latency.
+
+Implement semantic search capabilities to improve data retrieval for our AI chatbot.
+
+Optimize database schemas to support 10k+ concurrent user sessions.

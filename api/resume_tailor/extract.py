@@ -102,7 +102,7 @@ Familiarity with asynchronous programming using AsyncIO is nice to have.
 Experience working with CI/CD pipelines is considered a bonus.
 Previous experience with AI-powered systems or LLM integrations is not required but would be an advantage.
 """
-    model=model="llama-3.3-70b-versatile"
+    model="llama-3.3-70b-versatile"
     json_file = extract_relevant_jd(jd, model)
     normalized = normalize_output(json_file)
     score = calculate_score(normalized, master_resume)
