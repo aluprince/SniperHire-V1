@@ -1,2 +1,28 @@
+# Python environment
+.venv/
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# API Keys and Secrets
 .env
-.venv
+secrets.json
+
+# Local Outputs (Prevent pushing generated resumes)
+*.pdf
+Tailored_Resume.pdf
+cli/jd.txt
+master_resume.json
+
+# IDE Settings
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log

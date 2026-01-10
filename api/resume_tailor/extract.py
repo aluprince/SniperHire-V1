@@ -80,7 +80,7 @@ def extract_relevant_jd(job_description, model):
         }],
         model=model
     )
-    print(chat_completion.choices[0].message.content)
+    # print(chat_completion.choices[0].message.content)
 
     result = chat_completion.choices[0].message.content
     return result
@@ -106,10 +106,9 @@ Previous experience with AI-powered systems or LLM integrations is not required 
     json_file = extract_relevant_jd(jd, model)
     normalized = normalize_output(json_file)
     score = calculate_score(normalized, master_resume)
-    print(f"Resume Match Score: {score[0]}%, {score[1]} matched skills, {score[2]} missing skills")
+    # print(f"Resume Match Score: {score[0]}%, {score[1]} matched skills, {score[2]} missing skills")
     llm_tailored_json = run_tailoring_engine(master_resume=master_resume, raw_jd=jd, jd_requirements=normalized, missing_skills=score)
     # tailored resume 
     pdf_resume = generate_tailored_resume(llm_tailored_json, master_resume)
-    print(pdf_resume)
 
 

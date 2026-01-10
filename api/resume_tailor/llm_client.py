@@ -19,7 +19,7 @@ def get_llm_tailoring(prompt, context):
         }],
         model=model
     )
-    print(chat_completion.choices[0].message.content)
+    # print(chat_completion.choices[0].message.content)
 
     result = chat_completion.choices[0].message.content
     return result

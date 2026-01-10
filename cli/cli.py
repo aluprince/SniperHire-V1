@@ -39,12 +39,6 @@ def extract(jd_file: Path = typer.Argument(..., help="Path to the Job Descriptio
         return normalized_requirements
 
 
-def score(jd_requirements: json , master_resume: json):
-
-    score = calculate_score(jd_requirements, master_resume)
-
-    return score
-
 @app.command()
 def tailor(
     jd_file: Path = typer.Argument(..., help="Path to the Job Description text file"),
@@ -66,13 +60,13 @@ def tailor(
         with open(jd_file, "r") as f:
             jd_text = f.read()
 
-        jd_requirements = extract('c:/Portfolio Projects/SniperHire-V1/cli/jd.txt', model=model)
-        score = score(jd_requirements, master_data)
+        jd_requirements = extract(jd_file, model=model)
+        score = calculate_score(jd_requirements, master_data)
         tailored_json = run_tailoring_engine(master_data, jd_text, jd_requirements, score)
 
     # 3. UI Feedback using 'Rich'
     console.print(f"\n[bold]Tailoring Complete![/bold]")
-    console.print(f"[bold cyan]ATS Match Score:[/bold cyan] {score}%")
+    console.print(f"[bold cyan]ATS Match Score:[/bold cyan] {score[0]}%")
 
     if verbose:
         table = Table(title="Skill Match Breakdown")
