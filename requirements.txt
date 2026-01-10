@@ -10,8 +10,8 @@ streamlit
 xhtml2pdf
 
 # === Database ===
-SQLAlchemy==2.0.35
-psycopg2-binary==2.9.9
+# SQLAlchemy==2.0.35
+# psycopg2-binary==2.9.9
 
 # === NLP / Extractors ===
 spacy==3.7.4
