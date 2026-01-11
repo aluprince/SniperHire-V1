@@ -34,9 +34,10 @@
       "bullets": [
         "Developed autonomous workflow processing 50+ job descriptions daily, extracting requirements with 92% accuracy and performing ATS scoring targeting 85-95% pass rates.",
         "Built RAG pipeline for intelligent keyword injection and resume tailoring via Jinja2 with async processing for real-time generation.",
-        "Implemented system design patterns and async I/O pipelines reducing resume generation time from 2min to 15 seconds per document."
+        "Implemented system design patterns and async I/O pipelines reducing resume generation time from 2min to 15 seconds per document.",
+        "Engineered a dual-interface system including a Streamlit Web UI for rapid prototyping and a Python CLI for automated batch processing and developer workflows."
       ],
-      "technologies": ["Python", "LLMs", "RAG", "FastAPI", "AsyncIO", "System Design"]
+      "technologies": ["Python", "LLMs", "RAG", "FastAPI", "AsyncIO", "System Design", "CLI"]
     },
     {
       "name": "AI Authentication Chatbot (RAG + Verification)",

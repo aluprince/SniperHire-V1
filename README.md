@@ -10,7 +10,7 @@ Asynchronous Orchestration: Built with AsyncIO to handle LLM calls and PDF rende
 
 Jinja2 Templating: Decouples content from presentation, ensuring clean, ATS-compliant PDF generation every time.
 
-📂 Project Structure & Schema
+## 📂 Project Structure & Schema
 The system relies on a structured master_resume.json. This acts as your "source of truth."
 
 Master Resume Schema
@@ -54,7 +54,12 @@ To use the orchestrator, ensure your data follows this structure in api/resume_t
     "tools_devops": ["Docker", "Kubernetes", "PostgreSQL"],
     "concepts": ["REST APIs", "Microservices", "System Design"]
   }
-}
+} 
+
+##
+
+
+
 
 ## ⚙️ Environment Setup
 Before running the orchestrator, ensure you have your Groq API key configured:
