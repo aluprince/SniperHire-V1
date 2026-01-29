@@ -1,8 +1,54 @@
 from api.resume_tailor.vocab import VARIANT_TO_CANONICAL, VARIANT_TO_CONCEPT_CANONICAL
 from api.resume_tailor.normalizer import atomic_normalize
+from sentence_transformers import SentenceTransformer, util
 
 # Single source of truth for mapping
 MASTER_LOOKUP = {**VARIANT_TO_CANONICAL, **VARIANT_TO_CONCEPT_CANONICAL}
+
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+
+def calculate_segmented_score(jd_data, resume_json):
+
+    all_skills = set()
+    master_skill = resume_json.get("master_skills", [])
+    languages = set(master_skill["languages"])
+    frameworks = set(master_skill["frameworks"])
+    concepts = set(master_skill["concepts"])
+    devop_tools = set(master_skill["tools_devops"])
+
+    skill_union = languages | frameworks | concepts | devop_tools
+
+    for skill in skill_union:
+        all_skills.add(skill)
+    
+    res_skills = ", ".join(all_skills)
+    res_exp = " ".join(bullet for exp in resume_json.get("experience", []) for bullet in exp["bullets"])
+    
+    try: 
+    #We use the try block incase catch when we are to review the llm_tailored_json output
+        jd_skills = ", ".join(jd_data.hard_skills)
+        jd_experience = " ".join(jd_data.key_responsibilities)
+    except AttributeError: 
+        jd_skills = ", ".join(jd_data["hard_skills"])
+        jd_exp = " ".join(bullet for exp in jd_data["experience"] for bullet in exp["bullets"])
+        jd_proj = " ".join(bullet for proj in jd_data["projects"] for bullet in proj["bullets"])
+        jd_experience = jd_exp + jd_proj
+
+    emb_res_skills = model.encode(res_skills, convert_to_tensor=True)
+    emb_jd_skills = model.encode(jd_skills, convert_to_tensor=True)
+    
+    emb_res_exp = model.encode(res_exp, convert_to_tensor=True)
+    emb_jd_exp = model.encode(jd_experience, convert_to_tensor=True)
+    
+    # Calculating Cosine Similarities
+    skill_sim = util.cos_sim(emb_res_skills, emb_jd_skills).item()
+    exp_sim = util.cos_sim(emb_res_exp, emb_jd_exp).item()
+    
+    final_score = (skill_sim * 0.5) + (exp_sim * 0.5)
+    return round(final_score * 100, 2)
+
+
 
 def calculate_score(jd_data, master_resume):
     # --- 1. SYMMETRIC RESUME PREP ---

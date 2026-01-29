@@ -1,31 +1,26 @@
-JD_REQUIREMENTS_PROMPT = """
-You are a strict information extraction engine.
+from ..resume_tailor.schema import JDExtraction
 
-From the job description below:
-1. Extract REQUIRED skills
-2. Extract NICE-TO-HAVE skills
+SEMANTIC_JD_PROMPT = """
+You are a cold, analytical JD Parser. Your only job is to extract data from the provided text. 
 
-Return valid JSON only, No other message only the JSON SCHEMA REQUIRED.
+STRICT OPERATIONAL CONSTRAINTS:
+1. **Source Truth:** Extract ONLY from the text provided in the User Prompt. If a technology is not mentioned, it DOES NOT EXIST.
+2. **Zero Hallucination:** Do not use your training data to "fill in the blanks." Do not assume a Backend role needs Frontend skills.
+3. **No Fluff:** Soft skills (communication, etc.) are forbidden unless tied to a methodology.
+4. **Formatting:** Return a valid JSON object matching the schema below.
 
-Schema:
-{{
-  "required": {{
-    "languages": [],
-    "frameworks": [],
-    "tools": [],
-    "concepts": []
-  }},
-  "nice_to_have": {{
-    "languages": [],
-    "frameworks": [],
-    "tools": [],
-    "concepts": []
-  }}
-}}
+SCHEMA:
+{schema_json}
 
-Job Description:
+USER INPUT JOB DESCRIPTION:
 {job_description}
+ADDITIONAL INSTRUCTIONS:
+- Atomic Extraction: Lists (hard_skills, nice_to_haves, target_keywords) must contain ONLY the technology name or short phrase (e.g., 'AWS', not 'Experience with AWS').
+- No Sentences: Nice-to-haves must be atomic nouns, not full descriptions.
+
+Final Instruction: Return ONLY the JSON object. Do not include conversational filler.
 """
+
 
 TAILORING_PROMPT = """
 ROLE: Senior Technical Recruiter & ATS Optimization Expert.
@@ -46,12 +41,12 @@ STRICT CONSTRAINTS:
 OUTPUT FORMAT (JSON ONLY):
 {
   "professional_summary": "High-impact summary targeting the specific JD role.",
-  "categorized_skills": {
-      "languages": [],
-      "frameworks": [],
-      "tools": [],
-      "concepts": []
-  },
+  "hard_skills": [
+      "languages": "Languages identified in the JD",
+      "frameworks": "Frameworks identified in the JD",
+      "tools": "Tools Identifies in the JD",
+      "concepts": "Concepts Identified in the JD",
+  ],
   "experience": [
       {
         "company": "Company Name",

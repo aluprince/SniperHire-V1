@@ -10,14 +10,13 @@ if root_path not in sys.path:
 
 import streamlit as st
 import json
-from  api.resume_tailor.extract import extract_relevant_jd, normalize_output # Your extraction logic
+from  api.resume_tailor.extract import extract_relevant_jd, normalize_output 
 from api.resume_tailor.score import calculate_score
-from api.resume_tailor.tailor import run_tailoring_engine          # Your scoring logic
-from api.resume_tailor.renderer import generate_tailored_resume         # The cleaned renderer
+from api.resume_tailor.tailor import run_tailoring_engine          
+from api.resume_tailor.renderer import generate_tailored_resume 
 
 
-
-st.title("SniperHire: Standout With Your Resume")
+st.title("SniperHire: Tailor Your To The Job")
 st.markdown("---")
 
 # --- SIDEBAR: INPUTS ---

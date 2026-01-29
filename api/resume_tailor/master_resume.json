@@ -10,7 +10,7 @@
       "degree": "Bachelor of Engineering in Electrical & Electronics Engineering",
       "institution": "University of Port Harcourt",
       "location": "Nigeria",
-      "status": "In Progress (Expected 2027)",
+      "status": "In Progress (Expected 2028)",
       "highlights": "Focus: Computational Logic and Software Architecture"
     }
   ],
@@ -77,9 +77,9 @@
     }
   ],
   "master_skills": {
-    "languages": ["Python", "JavaScript", "SQL", "Node.js"],
+    "languages": ["Python", "JavaScript", "SQL", "Node.js", "GO", "PHP"],
     "frameworks": ["FastAPI", "Express", "SQLAlchemy", "LangChain", "LangGraph"],
-    "tools_devops": ["PostgreSQL", "Docker", "Vector Databases", "Redis", "Git", "AWS (Basic)", "PDF Rendering"],
+    "tools_devops": ["PostgreSQL", "Docker", "Vector Databases", "Redis", "Git", "AWS (Basic)"],
     "concepts": ["RAG Architecture", "JWT Auth", "System Design", "AsyncIO", "REST APIs", "Database Normalization", "CI/CD (Basic)", "Agentic Workflows"]
   }
 }

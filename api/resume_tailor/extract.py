@@ -3,10 +3,11 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 from .vocab import  CANONICAL_MAP, CONCEPT_CANONICAL_MAP
-from .prompts import JD_REQUIREMENTS_PROMPT
-from .score import calculate_score
+from .prompts import SEMANTIC_JD_PROMPT
+from .score import calculate_score, calculate_segmented_score
 from .tailor import run_tailoring_engine
 from .renderer import generate_tailored_resume
+from .schema import JDExtraction
 import json
 
 
@@ -72,19 +73,31 @@ def normalize_output(raw_text: str):
         raise e
     
 
-def extract_relevant_jd(job_description, model):
+def extract_jd(jd_text):
+    # Convert Pydantic schema to a JSON-schema string for the prompt
+    schema_json = json.dumps(JDExtraction.model_json_schema(), indent=2)
+    
     chat_completion = client.chat.completions.create(
-        messages=[{
-            "role" : "user",
-            "content": f"""{JD_REQUIREMENTS_PROMPT.format(job_description=job_description)}"""
-        }],
-        model=model
+        messages=[
+            {
+                "role": "system",
+                "content": f"{SEMANTIC_JD_PROMPT.format(job_description=jd_text, schema_json=schema_json)}"
+            }
+        ],
+        model="llama-3.3-70b-versatile", # High reasoning for extraction
+        temperature=0.0, # For a Deterministic Output and reduction of hallucinations
+        response_format={"type": "json_object"}
     )
-    # print(chat_completion.choices[0].message.content)
+    
+    raw_response = chat_completion.choices[0].message.content
+    normalized_response = normalize_output(raw_response)
 
-    result = chat_completion.choices[0].message.content
-    return result
-
+    
+    # Then validate against the Pydantic schema
+    try:
+        return JDExtraction.model_validate_json(json.dumps(normalized_response))
+    except Exception as e:
+        print(f">>> Schema Validation Error: {e}")
 
 
 if __name__ == "__main__":
@@ -102,12 +115,15 @@ Familiarity with asynchronous programming using AsyncIO is nice to have.
 Experience working with CI/CD pipelines is considered a bonus.
 Previous experience with AI-powered systems or LLM integrations is not required but would be an advantage.
 """
-    model="llama-3.3-70b-versatile"
-    json_file = extract_relevant_jd(jd, model)
-    normalized = normalize_output(json_file)
-    score = calculate_score(normalized, master_resume)
-    # print(f"Resume Match Score: {score[0]}%, {score[1]} matched skills, {score[2]} missing skills")
-    llm_tailored_json = run_tailoring_engine(master_resume=master_resume, raw_jd=jd, jd_requirements=normalized, missing_skills=score)
+    extracted_requirements = extract_jd(jd)
+    # print("Extracted JD Requirements:", extracted_requirements)
+    score_before_tailoring = calculate_segmented_score(extracted_requirements, master_resume)
+    print("This is before Optimization: ", score_before_tailoring)
+   
+    llm_tailored_json = run_tailoring_engine(master_resume=master_resume, raw_jd=jd, jd_requirements=extracted_requirements, missing_skills=score_before_tailoring)
+    
+    score_after_optimization = calculate_segmented_score(jd_data=llm_tailored_json, resume_json=master_resume)
+    print("This is after optimization: ", score_after_optimization)
     # tailored resume 
     pdf_resume = generate_tailored_resume(llm_tailored_json, master_resume)
 
